@@ -1,0 +1,72 @@
+<div class="section" *ngIf="isPageReady">
+
+  <div class="header">
+    <h1 class="title has-text-centered has-text-white">{{article.slug}}</h1>
+  </div>
+
+  <form #f="ngForm" (ngSubmit)="addLanguageArticle(f)">
+    <div class="columns">
+      <div class="column is-one-third">
+
+        <div class="">
+          <mat-form-field>
+            <input matInput placeholder="Makale Başlığı" ngModel name="title">
+          </mat-form-field>
+        </div>
+
+        <div class="">
+          <mat-form-field>
+            <input matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
+          </mat-form-field>
+        </div>
+
+        <div class="">
+          <mat-form-field>
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let keyword of keywords" (remove)="removeKeyword(keyword)">
+                {{keyword}}
+                <span matChipRemove>x</span>
+              </mat-chip>
+              <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addKeyword($event)">
+            </mat-chip-list>
+          </mat-form-field>
+        </div>
+
+        <div class="">
+          <mat-select placeholder="Dil" name="language_id" ngModel>
+            <mat-option *ngFor="let language of add_languages" [value]="language.id">
+              {{ language.name }}
+            </mat-option>
+          </mat-select>
+        </div>
+
+        <div class="">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <span>Yayınlanma</span>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <mat-checkbox ngModel name="published"></mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="has-text-centered">
+          <button mat-raised-button type="submit" [disabled]="!f.valid">Kaydet</button>
+        </div>
+
+      </div>
+      <div class="column">
+        <div class="">
+          <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>

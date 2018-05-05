@@ -1,0 +1,34 @@
+<mat-spinner *ngIf="!data" class="loading"></mat-spinner>
+
+<div class="" *ngIf="data">
+
+  <mat-table #table [dataSource]="data">
+
+    <ng-container cdkColumnDef="Author">
+      <mat-header-cell *cdkHeaderCellDef> Yazar </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.author.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Title">
+      <mat-header-cell *cdkHeaderCellDef> Başlık </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.trashed_contents[0].title}} </mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Deleted_At">
+      <mat-header-cell *cdkHeaderCellDef> Silinme Tarihi </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.deleted_at}} </mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="ArticleId">
+      <mat-header-cell *cdkHeaderCellDef> Olay</mat-header-cell>
+      <mat-cell *cdkCellDef="let row">
+        <button mat-raised-button (click)="restoreArticle(row.id)"> Geri Döndür </button>
+        <button mat-raised-button color="warn" (click)="forceDeleteArticle(row.id)"> Tamamen Sil </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *cdkRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+</div>

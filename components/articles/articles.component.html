@@ -1,0 +1,49 @@
+<mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
+
+<div class="section" *ngIf="isPageReady">
+
+  <div class="columns">
+    <a routerLink="trash">
+      <button mat-button>Çöplük</button>
+    </a>
+  </div>
+
+  <section class="articles">
+    <mat-card>
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <td>Başlık</td>
+            <td>Yayınlanma</td>
+            <td>Oluşturulma Tarihi</td>
+            <td>Diller</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let article of articles.data">
+            <td>{{article.contents[0].title}}</td>
+            <td>{{article.id}}</td>
+            <td>{{article.created_at | date}}</td>
+            <td>
+              <a *ngFor="let content of article.contents" [routerLink]="['/article/content/edit', article.slug, content.language.slug]">
+                <span class="tag is-light is-rounded">{{content.language.name}}</span>
+              </a>
+              <a [routerLink]="['/article/content/add', article.slug]" *ngIf="article.contents.length < languages.length">Ekle</a>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <mat-paginator [length]="articles.total" [pageSize]="intval(articles.per_page)" [pageSizeOptions]="pageSizeOptions" [pageIndex]="articles.current_page - 1"
+            (page)="changePageOptions($event)">
+          </mat-paginator>
+        </tfoot>
+      </table>
+    </mat-card>
+
+  </section>
+
+  <button mat-fab class="add-btn" [routerLink]="['/article/add']">
+    Ekle
+  </button>
+
+</div>
