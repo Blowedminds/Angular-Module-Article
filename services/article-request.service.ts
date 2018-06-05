@@ -26,7 +26,7 @@ export class ArticleRequestService extends MainRequestService {
   }
 
   getArticleByContent(slug: string, language_slug: string): Observable<any> {
-    const url = this.makeUrl('article.article.content', `${slug}/${language_slug}`);
+    const url = this.makeUrl('article.content', `${slug}/${language_slug}`);
 
     return this.http
       .get(url, this.options)
@@ -58,7 +58,7 @@ export class ArticleRequestService extends MainRequestService {
   }
 
   postArticleContent(id: number, data: any): Observable<any> {
-    const url = this.makeUrl('article.article.content', `${id}`);
+    const url = this.makeUrl('article.content', `${id}`);
 
     const formData = new FormData();
 
@@ -68,7 +68,7 @@ export class ArticleRequestService extends MainRequestService {
   }
 
   putArticleContent(id: number, data: any): Observable<any> {
-    const url = this.makeUrl('article.article.content', `${id}`);
+    const url = this.makeUrl('article.content', `${id}`);
 
     const formData = new FormData();
 
