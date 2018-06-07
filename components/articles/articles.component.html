@@ -21,7 +21,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let article of articles.data">
-            <td>{{article.contents[0].title}}</td>
+            <td><a [routerLink]="['/article/edit', article.slug]">{{article.contents[0].title}}</a></td>
             <td>{{article.id}}</td>
             <td>{{article.created_at | date}}</td>
             <td>

@@ -60,10 +60,10 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.cacheService.get('languages', this.articleRequestService.makeGetRequest('admin.languages'))
-      .subscribe(response => this.languages = response);
+      .subscribe(response => this.languages = response.slice(0));
 
     this.cacheService.get('categories', this.articleRequestService.makeGetRequest('admin.categories'))
-      .subscribe(response => this.categories = response);
+      .subscribe(response => this.categories = response.slice(0));
 
   }
 
