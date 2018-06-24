@@ -73,6 +73,19 @@
               </div>
             </div>
           </div>
+
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <span>Forumda Yayınla</span>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <mat-checkbox ngModel name="forum_published" [disabled]="!f.value.published"></mat-checkbox>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="">
@@ -104,89 +117,4 @@
 
     </div>
   </form>
-  <!-- <form #f="ngForm" (ngSubmit)="addArticle(f)">
-
-    <div class="form-group">
-
-      <mat-form-field>
-        <input matInput placeholder="Makale Başlığı" ngModel name="title">
-      </mat-form-field>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-form-field>
-        <input  matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
-      </mat-form-field>
-
-    </div>
-
-    <div class="form-group">
-
-      <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
-
-    </div>
-
-    <div class="form-group">
-      <mat-form-field>
-        <input  matInput placeholder="Etiketler" ngModel name="keywords">
-      </mat-form-field>
-    </div>
-
-    <div class="form-group">
-      <mat-form-field>
-        <input  matInput placeholder="Slug" ngModel name="slug">
-      </mat-form-field>
-    </div>
-
-    <div class="form-group">
-
-      <mat-select placeholder="Dil" ngModel name="language_id">
-        <mat-option *ngFor="let language of languages" [value]="language.id">
-          {{ language.name }}
-        </mat-option>
-      </mat-select>
-
-    </div>
-
-    <div class="form-group">
-      <h5>Kategoriler</h5>
-
-      <ul>
-        <li *ngFor="let category of add_categories; let i = index">{{category.name}} <span class="" (click)="deleteCategory(i)">X</span></li>
-      </ul>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-select placeholder="Eklenecek Kategori" #addcategory>
-        <mat-option *ngFor="let category of categories" [value]="category.id">
-          {{ category.name }}
-        </mat-option>
-      </mat-select>
-
-      <button mat-raised-button (click)="addCategory(addcategory)" type="button">Ekle</button>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-checkbox [(ngModel)]="published" name="published">Yayımla</mat-checkbox>
-
-    </div>
-
-    <div class="form-group">
-
-      <img src="" id="img">
-
-      <button mat-raised-button type="button" (click)="openImageSelect()">Resim Seç</button>
-
-    </div>
-
-    <button mat-raised-button type="submit" [disabled]="!f.valid">Kaydet</button>
-
-  </form> -->
-
 </div>
