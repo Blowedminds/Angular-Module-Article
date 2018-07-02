@@ -96,7 +96,7 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
         editor.addMenuItem('myitem', {
           text: 'Add Image',
           context: 'tools',
-          onclick: function () {
+          onclick: () => {
             const ImageSelectDialog = dialog.open(ImageSelectComponent, {
               data: {
                 image_request: this.articleRequestService.makeGetRequest('image.images'),

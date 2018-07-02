@@ -27,6 +27,8 @@ export class ArticlesComponent implements OnInit, OnDestroy {
 
   pageSizeOptions: Array<number> = [5, 10, 20, 50];
 
+  defaultPageSize = 10;
+
   get isPageReady(): boolean {
     return this.articles && this.languages && this.categories && this.user;
   }
@@ -43,7 +45,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
 
     const rq = this.activatedRoute.queryParams.pipe(
       switchMap((params: Params) => this.getArticlesPaginate({
-        pageSize: +params['page-size'] || this.pageSizeOptions[0],
+        pageSize: +params['page-size'] || this.defaultPageSize,
         pageIndex: +params['page'] || 0
       }))
     ).subscribe(articles => this.articles = articles);

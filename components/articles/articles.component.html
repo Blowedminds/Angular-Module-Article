@@ -1,12 +1,12 @@
 <mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
 
-<div class="section" *ngIf="isPageReady">
+<div class="" *ngIf="isPageReady">
 
-  <div class="columns">
+  <!-- <div class="columns">
     <a routerLink="trash">
       <button mat-button>Çöplük</button>
     </a>
-  </div>
+  </div> -->
 
   <section class="articles">
     <mat-card>
@@ -26,7 +26,7 @@
             <td>{{article.created_at | date}}</td>
             <td>
               <a *ngFor="let content of article.contents" [routerLink]="['/article/content/edit', article.slug, content.language.slug]">
-                <span class="tag is-light is-rounded">{{content.language.name}}</span>
+                <span class="tag is-primary is-rounded">{{content.language.name}}</span>
               </a>
               <a [routerLink]="['/article/content/add', article.slug]" *ngIf="article.contents.length < languages.length">Ekle</a>
             </td>

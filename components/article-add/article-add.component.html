@@ -1,32 +1,32 @@
 <div class="section" *ngIf="isPageReady">
   <form #f="ngForm" (ngSubmit)="addArticle(f)">
     <div class="columns">
-      <div class="column is-one-third">
+      <mat-card class="column is-one-third">
 
-        <div class="">
+        <div class="field">
           <mat-form-field>
             <input matInput placeholder="Makale Başlığı" ngModel name="title">
           </mat-form-field>
         </div>
 
-        <div class="">
+        <div class="field">
           <mat-form-field>
             <input matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
           </mat-form-field>
         </div>
 
-        <div class="">
+        <div class="field">
           <mat-form-field>
             <input matInput placeholder="Makale uzantısı" ngModel name="slug">
           </mat-form-field>
         </div>
 
-        <div class="">
+        <div class="field">
           <mat-form-field>
             <mat-chip-list #chipList>
-              <mat-chip *ngFor="let keyword of keywords" (remove)="removeKeyword(keyword)">
+              <mat-chip *ngFor="let keyword of keywords" [removable]="1 === 1" (removed)="removeKeyword(keyword)">
                 {{keyword}}
-                <span matChipRemove>x</span>
+                <span matChipRemove><i class="fa fa-times-circle" aria-hidden="true"></i></span>
               </mat-chip>
               <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="addKeyword($event)">
@@ -34,7 +34,7 @@
           </mat-form-field>
         </div>
 
-        <div class="">
+        <div class="field">
 
           <ul>
             <li *ngFor="let category of add_categories; let i = index">{{category.name}}
@@ -52,7 +52,7 @@
 
         </div>
 
-        <div class="">
+        <div class="field">
           <mat-select placeholder="Dil" name="language_id" ngModel>
             <mat-option *ngFor="let language of languages" [value]="language.id">
               {{ language.name }}
@@ -60,7 +60,7 @@
           </mat-select>
         </div>
 
-        <div class="">
+        <div class="field">
           <div class="level">
             <div class="level-left">
               <div class="level-item">
@@ -75,7 +75,7 @@
           </div>
         </div>
 
-        <div class="">
+        <div class="field">
           <div class="level">
             <div class="level-left">
               <div class="level-item">
@@ -91,102 +91,17 @@
         </div>
 
         <div class="has-text-centered">
-          <button mat-raised-button type="submit" [disabled]="!f.valid">Kaydet</button>
+          <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">Kaydet</button>
         </div>
 
-      </div>
+      </mat-card>
 
-      <div class="column is-two-thirds">
+      <mat-card class="column is-two-thirds">
         <div class="">
           <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
         </div>
-      </div>
+      </mat-card>
 
     </div>
   </form>
-  <!-- <form #f="ngForm" (ngSubmit)="addArticle(f)">
-
-    <div class="form-group">
-
-      <mat-form-field>
-        <input matInput placeholder="Makale Başlığı" ngModel name="title">
-      </mat-form-field>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-form-field>
-        <input  matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
-      </mat-form-field>
-
-    </div>
-
-    <div class="form-group">
-
-      <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
-
-    </div>
-
-    <div class="form-group">
-      <mat-form-field>
-        <input  matInput placeholder="Etiketler" ngModel name="keywords">
-      </mat-form-field>
-    </div>
-
-    <div class="form-group">
-      <mat-form-field>
-        <input  matInput placeholder="Slug" ngModel name="slug">
-      </mat-form-field>
-    </div>
-
-    <div class="form-group">
-
-      <mat-select placeholder="Dil" ngModel name="language_id">
-        <mat-option *ngFor="let language of languages" [value]="language.id">
-          {{ language.name }}
-        </mat-option>
-      </mat-select>
-
-    </div>
-
-    <div class="form-group">
-      <h5>Kategoriler</h5>
-
-      <ul>
-        <li *ngFor="let category of add_categories; let i = index">{{category.name}} <span class="" (click)="deleteCategory(i)">X</span></li>
-      </ul>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-select placeholder="Eklenecek Kategori" #addcategory>
-        <mat-option *ngFor="let category of categories" [value]="category.id">
-          {{ category.name }}
-        </mat-option>
-      </mat-select>
-
-      <button mat-raised-button (click)="addCategory(addcategory)" type="button">Ekle</button>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-checkbox [(ngModel)]="published" name="published">Yayımla</mat-checkbox>
-
-    </div>
-
-    <div class="form-group">
-
-      <img src="" id="img">
-
-      <button mat-raised-button type="button" (click)="openImageSelect()">Resim Seç</button>
-
-    </div>
-
-    <button mat-raised-button type="submit" [disabled]="!f.valid">Kaydet</button>
-
-  </form> -->
-
 </div>

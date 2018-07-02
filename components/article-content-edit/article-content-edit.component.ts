@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -56,6 +56,7 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
     private cacheService: CacheService,
     private articleRequestService: ArticleRequestService,
     public dialog: MatDialog,
+    public snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -81,7 +82,7 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
   runTinymce() {
     tinymce.init({
       height: '420px',
-      plugins: ['link', 'paste', 'table', 'image'],
+      plugins: ['link', 'paste', 'table', 'image', 'fullscreen'],
       selector: '#' + this.elementId,
       skin_url: '/assets/skins/lightgray',
       toolbar: 'image',
@@ -137,7 +138,7 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
       keywords: this.article.content.keywords,
       published: f.value.published ? 1 : 0,
       language_id: this.article.content.language_id,
-    }).subscribe(response => alert('success'));
+    }).subscribe(response => this.snackBar.open(response.message, response.action, {duration: 2000}));
 
     this.subs.add(rq2);
   }
