@@ -8,10 +8,11 @@ import { NgForm } from '@angular/forms';
 import * as tinymce from 'tinymce/tinymce';
 
 import { CacheService, HelpersService, ImageSelectComponent } from '../../imports';
-import { ArticleService } from '../../services/article.service';
 import { ArticleRequestService } from '../../services/article-request.service';
 
 import { Subscription } from 'rxjs';
+
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-article-add',
@@ -19,8 +20,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./article-add.component.sass']
 })
 export class ArticleAddComponent implements OnInit, OnDestroy {
-
-  published = false;
 
   add_categories: Array<any> = [];
 
@@ -132,7 +131,16 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
       slug: f.value.slug,
       category: categories,
       image: this.image_name
-    }).subscribe(response => this.helpersService.navigate(['/articles']));
+    }).subscribe(response => {
+
+      if (f.value.forum_published && f.value.published) {
+        const languageSlug = this.languages.find(language => language.id === f.value.language_id);
+        const url = `${environment.discussUrl}?article=${f.value.slug}&language=${languageSlug.slug}#new_topic`;
+        window.location.href = url;
+      } else {
+        this.helpersService.navigate(['/articles']);
+      }
+    });
 
     this.subs.add(rq1);
   }

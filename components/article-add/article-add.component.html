@@ -73,6 +73,19 @@
               </div>
             </div>
           </div>
+
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <span>Forumda Yayınla</span>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <mat-checkbox ngModel name="forum_published" [disabled]="!f.value.published"></mat-checkbox>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="field">
