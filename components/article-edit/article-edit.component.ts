@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
@@ -9,9 +9,9 @@ import { switchMap } from 'rxjs/operators';
 import { CacheService, HelpersService, ImageSelectComponent } from '../../imports';
 
 import { ArticleRequestService } from '../../services/article-request.service';
+import { ArticleService } from '../../services/article.service';
 
 import { ArticlePermissionComponent } from '../../dialogs/article-permission/article-permission.component';
-// import { ImageSelectComponent, ArticlePermission } from '../../../exports/dialogs';
 
 @Component({
   selector: 'app-article-edit',
@@ -22,9 +22,7 @@ export class ArticleEditComponent implements OnInit {
 
   article: any;
 
-  categories: any;
-
-  add_categories: any;
+  categories: Array<any> = [];
 
   API_URL: any;
 
@@ -35,13 +33,15 @@ export class ArticleEditComponent implements OnInit {
   subs = new Subscription();
 
   get isPageReady() {
-    return !!this.article;
+    return this.article && this.categories;
   }
 
   constructor(
     public dialog: MatDialog,
+    public snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private articleRequestService: ArticleRequestService,
+    private articleService: ArticleService,
     private cacheService: CacheService,
     private helpersService: HelpersService
   ) {
@@ -57,17 +57,14 @@ export class ArticleEditComponent implements OnInit {
 
         this.article = response;
 
-        this.categories = response.categories;
-
         const rq = this.cacheService
           .get('categories', this.articleRequestService.makeGetRequest('admin.categories'))
-          .subscribe(categories => {
-
-            this.add_categories = categories;
+          .subscribe((categories: Array<any>) => {
+            this.categories = Array.from(categories);
 
             for (const category of this.categories) {
-
-              this.add_categories = this.add_categories.filter(obj => obj.id !== category.id);
+              const index = response.categories.findIndex(_category => category.id === _category.id);
+              category.exist = index !== -1;
             }
           });
 
@@ -84,33 +81,18 @@ export class ArticleEditComponent implements OnInit {
     return this.helpersService.getToken();
   }
 
-  addCategory(item: any) {
-    if (item.selected.value === undefined || item.selected.value == null) {
-
-      return;
-    }
-
-    const index = this.add_categories.findIndex(obj => obj.id === item.selected.value);
-
-    this.categories.push(this.add_categories[index]);
-
-    this.add_categories.splice(index, 1);
-  }
-
-  deleteCategory(item: any) {
-    this.add_categories.push(this.categories[item]);
-
-    this.categories.splice(item, 1);
-  }
-
-  editArticle(f: NgForm) {
-    const categories = this.categories.map(category => category.id);
+  postArticle(f: NgForm) {
+    const categories = this.categories.filter(category => category.exist).map(category => category.id);
 
     const rq1 = this.articleRequestService.postArticle(this.article.id, {
       slug: f.value.slug,
       categories: categories,
       image: f.value.image
-    }).subscribe(response => this.helpersService.navigate(['/article/edit', f.value.slug]));
+    }).subscribe(response => {
+      this.articleService.openSnack(this.snackBar, response, response.state === 'success');
+
+      this.helpersService.navigate(['/article/edit', f.value.slug]);
+    });
 
     this.subs.add(rq1);
   }

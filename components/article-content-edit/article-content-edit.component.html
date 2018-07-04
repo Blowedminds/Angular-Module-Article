@@ -8,58 +8,60 @@
     <div class="columns">
       <mat-card class="column is-one-third">
 
-          <div class="field">
-            <mat-form-field>
-              <input matInput placeholder="Makale Başlığı" [ngModel]="article.content.title" name="title">
-            </mat-form-field>
-          </div>
+        <div class="field">
+          <mat-form-field>
+            <input matInput placeholder="Makale Başlığı" [ngModel]="article.content.title" name="title">
+          </mat-form-field>
+        </div>
 
-          <div class="field">
-            <mat-form-field>
-              <input matInput placeholder="Makale Alt Başlığı" [ngModel]="article.content.sub_title" name="sub_title">
-            </mat-form-field>
-          </div>
+        <div class="field">
+          <mat-form-field>
+            <input matInput placeholder="Makale Alt Başlığı" [ngModel]="article.content.sub_title" name="sub_title">
+          </mat-form-field>
+        </div>
 
-          <div class="field">
-            <mat-form-field>
-              <mat-chip-list #chipList>
-                <mat-chip *ngFor="let keyword of article.content.keywords" [removable]="1 === 1" (removed)="removeKeyword(keyword)">
-                  {{keyword}}
-                  <span matChipRemove><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                </mat-chip>
-                <input [matChipInputFor]="chipList" 
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
-                (matChipInputTokenEnd)="addKeyword($event)">
-              </mat-chip-list>
-            </mat-form-field>
-          </div>
+        <div class="field">
+          <mat-form-field>
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let keyword of article.content.keywords" [removable]="1 === 1" (removed)="removeKeyword(keyword)">
+                {{keyword}}
+                <span matChipRemove>
+                  <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </span>
+              </mat-chip>
+              <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addKeyword($event)">
+            </mat-chip-list>
+          </mat-form-field>
+        </div>
 
-          <div class="field">
-            <mat-select placeholder="Dil" name="language" [ngModel]="article.content.language_id" disabled>
-              <mat-option [value]="language.id">
-                {{ language.name }}
-              </mat-option>
-            </mat-select>
-          </div>
+        <div class="field">
+          <mat-select placeholder="Dil" name="language" [ngModel]="article.content.language_id" disabled>
+            <mat-option [value]="language.id">
+              {{ language.name }}
+            </mat-option>
+          </mat-select>
+        </div>
 
-          <div class="field">
-            <div class="level">
-              <div class="level-left">
-                <div class="level-item">
-                  <span>Yayınlanma</span>
-                </div>
+        <div class="field">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <span>Yayınlanma</span>
               </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <mat-checkbox [(ngModel)]="article.content.published" name="published"></mat-checkbox>
-                </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <mat-checkbox [(ngModel)]="article.content.published" name="published"></mat-checkbox>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="field has-text-centered">
-            <button mat-fab type="submit" class="add-btn" [disabled]="!f.valid">Kaydet</button>
-          </div>
+        <div class="field has-text-centered">
+          <button mat-fab type="submit" class="add-btn" [disabled]="!f.valid">
+            <i class="fa fa-floppy-o is-size-4" aria-hidden="true"></i>
+          </button>
+        </div>
       </mat-card>
 
       <mat-card class="column">

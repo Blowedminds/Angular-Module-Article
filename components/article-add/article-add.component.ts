@@ -21,13 +21,11 @@ import { environment } from '../../../../environments/environment';
 })
 export class ArticleAddComponent implements OnInit, OnDestroy {
 
-  add_categories: Array<any> = [];
-
   editor: any;
 
   languages: any;
 
-  categories: any;
+  categories: Array<any> = [];
 
   keywords: Array<string> = [];
 
@@ -62,7 +60,14 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
       .subscribe(response => this.languages = response.slice(0));
 
     this.cacheService.get('categories', this.articleRequestService.makeGetRequest('admin.categories'))
-      .subscribe(response => this.categories = response.slice(0));
+      .subscribe(response => {
+        this.categories = Array.from(response);
+
+        this.categories.map(category => {
+          category.exist = false;
+          return category;
+        });
+      });
 
   }
 
@@ -119,7 +124,7 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
   }
 
   addArticle(f: NgForm) {
-    const categories = this.add_categories.map(category => category.id);
+    const categories = this.categories.filter(category => category.exist).map(category => category.id);
 
     const rq1 = this.articleRequestService.putArticle({
       title: f.value.title,
@@ -143,24 +148,6 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
     });
 
     this.subs.add(rq1);
-  }
-
-  addCategory(item: any) {
-    if (typeof item.selected.value === 'undefined' || item.selected.value == null) {
-      return;
-    }
-
-    const index = this.categories.findIndex(obj => obj.id === item.selected.value);
-
-    this.add_categories.push(this.categories[index]);
-
-    this.categories.splice(index, 1);
-  }
-
-  deleteCategory(item: any) {
-    this.categories.push(this.categories[item]);
-
-    this.add_categories.splice(item, 1);
   }
 
   openImageSelect() {

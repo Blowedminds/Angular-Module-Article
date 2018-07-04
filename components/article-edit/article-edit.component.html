@@ -1,6 +1,72 @@
 <mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
 
-<div class="edit-main-dialog" *ngIf="isPageReady">
+<div class="" *ngIf="isPageReady">
+  <form #f="ngForm" (ngSubmit)="postArticle(f)">
+    <div class="columns">
+      <div class="column is-one-third">
+        <mat-card>
+          <div class="field">
+            <p class="title is-size-4 has-text-weight-light">Makale Bilgileri</p>
+            <hr>
+          </div>
+
+          <div class="field">
+            <mat-form-field class="is-12">
+              <input matInput placeholder="Yazar" [ngModel]="article.author.name" name="title" disabled>
+            </mat-form-field>
+          </div>
+
+          <div class="field">
+            <mat-form-field class="is-12">
+              <input matInput placeholder="Slug" [ngModel]="article.slug" name="slug">
+            </mat-form-field>
+          </div>
+
+          <div class="field">
+            <div class="image is-128x128">
+              <a (click)="openImageSelect()">
+                <img src="{{THUMB_IMAGE_URL + article.image +'?token=' + getToken()}}" id="img">
+              </a>
+            </div>
+            <input type="hidden" placeholder="" [ngModel]="article.image" name="image">
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="column is-one-third">
+        <mat-card>
+          <div class="field">
+            <p class="title is-size-4 has-text-weight-light">Kategoriler</p>
+            <hr>
+          </div>
+          <div class="field" *ngFor="let category of categories">
+            <mat-checkbox [(ngModel)]="category.exist" [name]="category.slug">{{category.name}}</mat-checkbox>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="column is-one-third">
+        <mat-card>
+          <div class="field" *ngIf="user.user_id == article.author.user_id || user.role_id == 1">
+            <button mat-raised-button type="button" (click)="openManagePermission()">İzinleri Yönet</button>
+          </div>
+
+          <div class="field">
+            <button mat-raised-button type="button" color="warn" (click)="deleteArticle()">Çöpe taşı</button>
+          </div>
+        </mat-card>
+
+      </div>
+    </div>
+
+    <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
+      <i class="fa fa-floppy-o is-size-4" aria-hidden="true"></i>
+    </button>
+
+  </form>
+</div>
+
+<!-- <div class="edit-main-dialog" *ngIf="isPageReady">
 
   <form #f="ngForm" (ngSubmit)="editArticle(f)">
 
@@ -35,7 +101,9 @@
       <h5>Kategoriler</h5>
 
       <ul>
-        <li *ngFor="let category_item of article.categories; let i = index">{{category_item.name}} <span class="" (click)="deleteCategory(i)">X</span></li>
+        <li *ngFor="let category_item of article.categories; let i = index">{{category_item.name}}
+          <span class="" (click)="deleteCategory(i)">X</span>
+        </li>
       </ul>
 
     </div>
@@ -61,4 +129,4 @@
     <button mat-raised-button type="submit" [disabled]="!f.valid">Kaydet</button>
   </form>
 
-</div>
+</div> -->

@@ -25,7 +25,9 @@
             <mat-chip-list #chipList>
               <mat-chip *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
                 {{keyword}}
-                <span matChipRemove><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                <span matChipRemove>
+                  <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </span>
               </mat-chip>
               <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="addKeyword($event)">
@@ -57,7 +59,9 @@
         </div>
 
         <div class="has-text-centered">
-          <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">Kaydet</button>
+          <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
+            <i class="fa fa-plus is-size-4" aria-hidden="true"></i>
+          </button>
         </div>
 
       </mat-card>
