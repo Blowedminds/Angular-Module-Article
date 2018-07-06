@@ -9,7 +9,7 @@ import { ArticleContentEditComponent } from './components/article-content-edit/a
 import { ArticleTrashComponent } from './components/article-trash/article-trash.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
-const routes = [
+const routes: Routes = [
   {
     path: '', component: NavigationComponent, children: [
       { path: 'articles', component: ArticlesComponent },

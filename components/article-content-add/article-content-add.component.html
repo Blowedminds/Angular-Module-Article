@@ -6,70 +6,72 @@
 
   <form #f="ngForm" (ngSubmit)="addLanguageArticle(f)">
     <div class="columns">
-      <mat-card class="column is-one-third">
+      <div class="column is-one-third">
+        <mat-card>
+          <div class="field">
+            <mat-form-field>
+              <input matInput placeholder="Makale Başlığı" ngModel name="title">
+            </mat-form-field>
+          </div>
 
-        <div class="field">
-          <mat-form-field>
-            <input matInput placeholder="Makale Başlığı" ngModel name="title">
-          </mat-form-field>
-        </div>
+          <div class="field">
+            <mat-form-field>
+              <input matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
+            </mat-form-field>
+          </div>
 
-        <div class="field">
-          <mat-form-field>
-            <input matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
-          </mat-form-field>
-        </div>
+          <div class="field">
+            <mat-form-field>
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
+                  {{keyword}}
+                  <span matChipRemove>
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                  </span>
+                </mat-chip>
+                <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addKeyword($event)">
+              </mat-chip-list>
+            </mat-form-field>
+          </div>
 
-        <div class="field">
-          <mat-form-field>
-            <mat-chip-list #chipList>
-              <mat-chip *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
-                {{keyword}}
-                <span matChipRemove>
-                  <i class="fa fa-times-circle" aria-hidden="true"></i>
-                </span>
-              </mat-chip>
-              <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                (matChipInputTokenEnd)="addKeyword($event)">
-            </mat-chip-list>
-          </mat-form-field>
-        </div>
+          <div class="field">
+            <mat-select placeholder="Dil" name="language_id" ngModel>
+              <mat-option *ngFor="let language of add_languages" [value]="language.id">
+                {{ language.name }}
+              </mat-option>
+            </mat-select>
+          </div>
 
-        <div class="field">
-          <mat-select placeholder="Dil" name="language_id" ngModel>
-            <mat-option *ngFor="let language of add_languages" [value]="language.id">
-              {{ language.name }}
-            </mat-option>
-          </mat-select>
-        </div>
-
-        <div class="field">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <span>Yayınlanma</span>
+          <div class="field">
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <span>Yayınlanma</span>
+                </div>
               </div>
-            </div>
-            <div class="level-right">
-              <div class="level-item">
-                <mat-checkbox ngModel name="published"></mat-checkbox>
+              <div class="level-right">
+                <div class="level-item">
+                  <mat-checkbox ngModel name="published"></mat-checkbox>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="has-text-centered">
-          <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
-            <i class="fa fa-plus is-size-4" aria-hidden="true"></i>
-          </button>
-        </div>
-
-      </mat-card>
-      <mat-card class="column">
-        <div class="">
-          <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
-        </div>
-      </mat-card>
+          <div class="has-text-centered field">
+            <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+      <div class="column">
+        <mat-card>
+          <div class="">
+            <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
+          </div>
+        </mat-card>
+      </div>
     </div>
   </form>
 

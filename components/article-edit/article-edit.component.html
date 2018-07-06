@@ -60,73 +60,8 @@
     </div>
 
     <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
-      <i class="fa fa-floppy-o is-size-4" aria-hidden="true"></i>
+      <mat-icon>save</mat-icon>
     </button>
 
   </form>
 </div>
-
-<!-- <div class="edit-main-dialog" *ngIf="isPageReady">
-
-  <form #f="ngForm" (ngSubmit)="editArticle(f)">
-
-    <div class="form-group">
-
-      <mat-form-field>
-        <input matInput placeholder="Yazar" [ngModel]="article.author.name" name="title" disabled>
-      </mat-form-field>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-form-field>
-        <input matInput placeholder="Slug" [ngModel]="article.slug" name="slug">
-      </mat-form-field>
-
-    </div>
-
-    <div class="form-group">
-
-      <img src="{{THUMB_IMAGE_URL + article.image +'?token=' + getToken()}}" id="img">
-
-      <input type="hidden" placeholder="" [ngModel]="article.image" name="image">
-
-      <button mat-raised-button type="button" (click)="openImageSelect()">Resim Seç</button>
-
-    </div>
-
-
-    <div class="form-group">
-      <h5>Kategoriler</h5>
-
-      <ul>
-        <li *ngFor="let category_item of article.categories; let i = index">{{category_item.name}}
-          <span class="" (click)="deleteCategory(i)">X</span>
-        </li>
-      </ul>
-
-    </div>
-
-    <div class="form-group">
-
-      <mat-select placeholder="Eklenecek Kategori" #addcategory>
-        <mat-option *ngFor="let category of add_categories" [value]="category.id">
-          {{ category.name }}
-        </mat-option>
-      </mat-select>
-
-      <button mat-raised-button (click)="addCategory(addcategory)" type="button">Ekle</button>
-
-    </div>
-
-    <div class="form-group" *ngIf="user.user_id == article.author.user_id || user.role_id == 1">
-      <button mat-raised-button type="button" (click)="openManagePermission()">İzinleri Yönet</button>
-    </div>
-
-    <button mat-raised-button type="button" color="warn" (click)="deleteArticle()">Çöpe taşı</button>
-
-    <button mat-raised-button type="submit" [disabled]="!f.valid">Kaydet</button>
-  </form>
-
-</div> -->

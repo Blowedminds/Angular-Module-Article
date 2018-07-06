@@ -9,7 +9,6 @@ import { NgForm } from '@angular/forms';
 import * as tinymce from 'tinymce/tinymce';
 
 import { CacheService, ImageSelectComponent } from '../../imports';
-import { ArticleService } from '../../services/article.service';
 import { ArticleRequestService } from '../../services/article-request.service';
 
 import { Subscription } from 'rxjs';
