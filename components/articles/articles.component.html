@@ -14,7 +14,7 @@
         <thead>
           <tr>
             <td>Başlık</td>
-            <td>Yayınlanma</td>
+            <td>Okunma</td>
             <td>Oluşturulma Tarihi</td>
             <td>Diller</td>
           </tr>
@@ -22,7 +22,7 @@
         <tbody>
           <tr *ngFor="let article of articles.data">
             <td><a [routerLink]="['/article/edit', article.slug]">{{article.contents[0].title}}</a></td>
-            <td>{{article.id}}</td>
+            <td>{{article.views}}</td>
             <td>{{article.created_at | date}}</td>
             <td>
               <a *ngFor="let content of article.contents" [routerLink]="['/article/content/edit', article.slug, content.language.slug]">
