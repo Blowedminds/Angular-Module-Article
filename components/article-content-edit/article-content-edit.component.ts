@@ -94,6 +94,7 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
 
           const content = editor.getContent();
           this.editorKeyup.emit(content);
+          this.article.content.body = content;
         });
 
         editor.addMenuItem('myitem', {
