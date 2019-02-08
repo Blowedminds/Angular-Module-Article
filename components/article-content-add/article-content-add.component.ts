@@ -109,7 +109,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
             const ImageSelectDialog = dialog.open(ImageSelectComponent, {
               data: {
                 image_request: this.articleRequestService.makeGetRequest('image.images'),
-                thumb_image_url: this.articleRequestService.makeUrl('image.image')
+                thumb_image_url: this.articleRequestService.makeUrl('storage.images')
               }
             });
 

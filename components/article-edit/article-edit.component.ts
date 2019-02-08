@@ -108,7 +108,7 @@ export class ArticleEditComponent implements OnInit {
     const dialogRef = this.dialog.open(ImageSelectComponent, {
       data: {
         image_request: this.articleRequestService.makeGetRequest('image.images'),
-        thumb_image_url: this.articleRequestService.makeUrl('image.thumb')
+        thumb_image_url: this.articleRequestService.makeUrl('storage.images.thumbs')
       }
     });
 
