@@ -5,7 +5,7 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 import { NgForm } from '@angular/forms';
 
-import * as tinymce from 'tinymce/tinymce';
+// import * as tinymce from 'tinymce/tinymce';
 
 import { CacheService, HelpersService, ImageSelectComponent } from '../../imports';
 import { ArticleRequestService } from '../../services/article-request.service';
@@ -13,6 +13,8 @@ import { ArticleRequestService } from '../../services/article-request.service';
 import { Subscription } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+
+declare var tinymce: any;
 
 @Component({
   selector: 'app-article-add',
