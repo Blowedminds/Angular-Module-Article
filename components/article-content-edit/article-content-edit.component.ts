@@ -86,8 +86,8 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
       height: '420px',
       plugins: ['link', 'paste', 'table', 'image', 'fullscreen'],
       selector: '#' + this.elementId,
-      skin_url: '/assets/skins/lightgray',
-      toolbar: 'image',
+      skin_url: '/assets/skins/oxide',
+      toolbar: 'image myitem',
       setup: editor => {
 
         const dialog = this.dialog;
@@ -99,10 +99,9 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
           this.article.content.body = content;
         });
 
-        editor.ui.registry.addMenuItem('myitem', {
-          text: 'Add Image',
-          context: 'tools',
-          onclick: () => {
+        editor.ui.registry.addButton('myitem', {
+          text: 'Resim Ekle',
+          onAction: (_) => {
             const ImageSelectDialog = dialog.open(ImageSelectComponent, {
               data: {
                 image_request: this.articleRequestService.makeGetRequest('image.images'),

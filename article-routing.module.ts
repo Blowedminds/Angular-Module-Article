@@ -7,7 +7,7 @@ import { ArticleContentAddComponent } from './components/article-content-add/art
 import { ArticleEditComponent } from './components/article-edit/article-edit.component';
 import { ArticleContentEditComponent } from './components/article-content-edit/article-content-edit.component';
 import { ArticleTrashComponent } from './components/article-trash/article-trash.component';
-import { NavigationComponent } from './components/navigation/navigation.component';
+import { NavigationComponent } from './imports';
 
 const routes: Routes = [
   {
