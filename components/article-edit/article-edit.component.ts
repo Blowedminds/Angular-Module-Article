@@ -40,25 +40,25 @@ export class ArticleEditComponent implements OnInit {
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private articleRequestService: ArticleRequestService,
-    private articleService: ArticleService,
+    private requestService: ArticleRequestService,
+    private service: ArticleService,
     private cacheService: CacheService,
     private helpersService: HelpersService
   ) {
-    this.THUMB_IMAGE_URL = this.articleRequestService.makeUrl('image.thumb');
+    this.THUMB_IMAGE_URL = this.requestService.makeUrl('storage.images.thumbs');
   }
 
   ngOnInit() {
     const rq1 = this.route.params
       .pipe(switchMap((params: Params) =>
-        this.articleRequestService.getArticle(params['slug'])
+        this.requestService.getArticle(params['slug'])
       ))
       .subscribe((response: any) => {
 
         this.article = response;
 
         const rq = this.cacheService
-          .get('categories', this.articleRequestService.makeGetRequest('admin.categories'))
+          .get('categories', this.requestService.makeGetRequest('admin.categories'))
           .subscribe((categories: Array<any>) => {
             this.categories = Array.from(categories);
 
@@ -71,7 +71,7 @@ export class ArticleEditComponent implements OnInit {
         this.subs.add(rq);
       });
 
-    const rq2 = this.cacheService.get('user', this.articleRequestService.makeGetRequest('user.info'))
+    const rq2 = this.cacheService.get('user', this.requestService.makeGetRequest('user.info'))
       .subscribe(response => this.user = response);
 
     this.subs.add(rq1).add(rq2);
@@ -84,12 +84,12 @@ export class ArticleEditComponent implements OnInit {
   postArticle(f: NgForm) {
     const categories = this.categories.filter(category => category.exist).map(category => category.id);
 
-    const rq1 = this.articleRequestService.postArticle(this.article.id, {
+    const rq1 = this.requestService.postArticle(this.article.id, {
       slug: f.value.slug,
       categories: categories,
       image: f.value.image
     }).subscribe(response => {
-      this.articleService.openSnack(this.snackBar, response, response.state === 'success');
+      this.service.openSnack(this.snackBar, response, response.state === 'success');
 
       this.helpersService.navigate(['/article/edit', f.value.slug]);
     });
@@ -98,7 +98,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   deleteArticle() {
-    const rq2 = this.articleRequestService.deleteArticle(this.article.id)
+    const rq2 = this.requestService.deleteArticle(this.article.id)
       .subscribe(response => this.helpersService.navigate(['/articles']));
 
     this.subs.add(rq2);
@@ -107,8 +107,8 @@ export class ArticleEditComponent implements OnInit {
   openImageSelect() {
     const dialogRef = this.dialog.open(ImageSelectComponent, {
       data: {
-        image_request: this.articleRequestService.makeGetRequest('image.images'),
-        thumb_image_url: this.articleRequestService.makeUrl('storage.images.thumbs')
+        image_request: this.requestService.makeGetRequest('image.images'),
+        thumb_image_url: this.requestService.makeUrl('storage.images.thumbs')
       }
     });
 

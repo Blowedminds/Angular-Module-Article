@@ -23,14 +23,14 @@
           <div class="field">
             <mat-form-field>
               <mat-chip-list #chipList>
-                <mat-chip *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
+                <mat-chip *ngFor="let keyword of keywords" (removed)="service.removeKeyword(keyword)">
                   {{keyword}}
                   <span matChipRemove>
                     <i class="fa fa-times-circle" aria-hidden="true"></i>
                   </span>
                 </mat-chip>
                 <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  (matChipInputTokenEnd)="addKeyword($event)">
+                  (matChipInputTokenEnd)="service.addKeyword($event, keywords)">
               </mat-chip-list>
             </mat-form-field>
           </div>

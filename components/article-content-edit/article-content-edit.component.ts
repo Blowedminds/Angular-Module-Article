@@ -5,14 +5,6 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-// import * as tinymce from 'tinymce/tinymce';
-// import 'tinymce/themes/modern/theme';
-// import 'tinymce/plugins/paste';
-// import 'tinymce/plugins/link';
-// import 'tinymce/plugins/table';
-// import 'tinymce/plugins/image';
-// import 'tinymce/plugins/fullscreen';
-
 import { CacheService, ImageSelectComponent } from '../../imports';
 import { ArticleRequestService } from '../../services/article-request.service';
 

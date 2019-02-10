@@ -26,15 +26,19 @@
             <td>{{article.created_at | date}}</td>
             <td>
               <a *ngFor="let content of article.contents" [routerLink]="['/article/content/edit', article.slug, content.language.slug]">
-                <span class="tag is-primary is-rounded">{{content.language.name}}</span>
+                <span class="tag is-rounded" [ngClass]="{'is-primary': content.published, 'is-danger': !content.published}">{{content.language.name}}</span>
               </a>
-              <a [routerLink]="['/article/content/add', article.slug]" *ngIf="article.contents.length < languages.length">Ekle</a>
+              <a [routerLink]="['/article/content/add', article.slug]" *ngIf="article.contents.length < languages.length">
+                <button mat-mini-fab style="margin-left: 7px">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </a>
             </td>
           </tr>
         </tbody>
         <tfoot>
-          <mat-paginator [length]="articles.total" [pageSize]="intval(articles.per_page)" [pageSizeOptions]="pageSizeOptions" [pageIndex]="articles.current_page - 1"
-            (page)="changePageOptions($event)">
+          <mat-paginator [length]="articles.total" [pageSize]="articles.per_page" [pageSizeOptions]="service.pageSizeOptions"
+            [pageIndex]="articles.current_page - 1" (page)="service.changePageOptions(helpersService, $event)">
           </mat-paginator>
         </tfoot>
       </table>

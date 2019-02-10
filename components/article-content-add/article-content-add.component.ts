@@ -6,13 +6,12 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-// import * as tinymce from 'tinymce/tinymce';
-
 import { CacheService, ImageSelectComponent } from '../../imports';
 import { ArticleRequestService } from '../../services/article-request.service';
 
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ArticleService } from '../../services/article.service';
 
 declare var tinymce: any;
 
@@ -28,10 +27,6 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
   add_languages: any;
 
   keywords: Array<string> = [];
-
-  @Input() elementId = 'tinymce-textarea';
-
-  @Output() editorKeyup = new EventEmitter<any>();
 
   editor: any;
 
@@ -52,31 +47,32 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialog: MatDialog,
-    private articleRequestService: ArticleRequestService,
+    private requestService: ArticleRequestService,
+    private service: ArticleService,
     private cacheService: CacheService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    this.subs.add(
+      this.route.params.pipe(switchMap((params: Params) => this.requestService.getArticle(params['slug']))
+      ).subscribe(response => {
 
-    const rq1 = this.route.params.pipe(switchMap((params: Params) => this.articleRequestService.getArticle(params['slug']))
-    ).subscribe(response => {
+        this.article = response;
 
-      this.article = response;
+        this.subs.add(
+          this.cacheService.get('languages', this.requestService.makeGetRequest('admin.languages'))
+            .subscribe(languages => {
+              this.add_languages = languages;
 
-      const rq2 = this.cacheService.get('languages', this.articleRequestService.makeGetRequest('admin.languages'))
-        .subscribe(languages => {
-          this.add_languages = languages;
+              for (const content of response.contents) {
 
-          for (const content of response.contents) {
-
-            this.add_languages = this.add_languages.filter(language => language.id !== content.language_id);
-          }
-        });
-
-      // this.subs.add(rq2)
-    });
-    this.subs.add(rq1);
+                this.add_languages = this.add_languages.filter(language => language.id !== content.language_id);
+              }
+            })
+        );
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -88,38 +84,26 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
   runTinymce() {
     tinymce.init({
       height: '420px',
-      selector: '#' + this.elementId,
+      selector: '#tinymce-textarea',
       plugins: ['link', 'paste', 'table', 'image'],
-      toolbar: 'image',
-      skin_url: '/assets/skins/lightgray',
+      skin_url: '/assets/skins/oxide',
+      toolbar: 'image myitem',
       setup: editor => {
 
-        const dialog = this.dialog;
+        editor.ui.registry.addButton('myitem', {
+          text: 'Resim Ekle',
+          onAction: (_) => {
 
-        editor.on('keyup', () => {
-
-          const content = editor.getContent();
-          this.editorKeyup.emit(content);
-        });
-
-        editor.addMenuItem('myitem', {
-          text: 'Add Image',
-          context: 'tools',
-          onclick: () => {
-            const ImageSelectDialog = dialog.open(ImageSelectComponent, {
-              data: {
-                image_request: this.articleRequestService.makeGetRequest('image.images'),
-                thumb_image_url: this.articleRequestService.makeUrl('storage.images')
-              }
-            });
-
-            const rq1 = ImageSelectDialog.afterClosed().subscribe(response => {
-              editor.insertContent(
-                `<img src="${response.thumb_url}" alt="${response.alt}" width="${response.width}" height="${response.height}" />`
-              );
-
-              rq1.unsubscribe();
-            });
+            this.subs.add(
+              this.service.insertImageIntoEditor(this.dialog, ImageSelectComponent, {
+                image_request: this.requestService.makeGetRequest('image.images'),
+                thumb_image_url: this.requestService.makeUrl('storage.images')
+              }).subscribe(response =>
+                editor.insertContent(
+                  `<img src="${response.thumb_url}" alt="${response.alt}" width="${response.width}" height="${response.height}" />`
+                )
+              )
+            );
           }
         });
 
@@ -129,37 +113,15 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
   }
 
   addLanguageArticle(f: NgForm) {
-    const rq1 = this.articleRequestService.putArticleContent(this.article.id, {
-      title: f.value.title,
-      sub_title: f.value.sub_title,
-      body: tinymce.activeEditor.getContent(),
-      keywords: this.keywords,
-      published: f.value.published ? 1 : 0,
-      language_id: f.value.language_id
-    }).subscribe((response) => alert('success'));
-
-    this.subs.add(rq1);
-  }
-
-  addKeyword(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-    // Add our keyword
-    if ((value || '').trim()) {
-      this.keywords.push(value.trim());
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  removeKeyword(keyword: any): void {
-    const index = this.keywords.indexOf(keyword);
-
-    if (index >= 0) {
-      this.keywords.splice(index, 1);
-    }
+    this.subs.add(
+      this.requestService.putArticleContent(this.article.id, {
+        title: f.value.title,
+        sub_title: f.value.sub_title,
+        body: tinymce.activeEditor.getContent(),
+        keywords: this.keywords,
+        published: f.value.published ? 1 : 0,
+        language_id: f.value.language_id
+      }).subscribe((response) => alert('success'))
+    );
   }
 }
