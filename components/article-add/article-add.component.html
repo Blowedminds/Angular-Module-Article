@@ -1,4 +1,5 @@
-<div class="section" *ngIf="isPageReady">
+<div class="container" *ngIf="isPageReady">
+
   <form #f="ngForm" (ngSubmit)="addArticle(f)">
     <div class="columns is-multiline">
 
@@ -6,39 +7,31 @@
         <mat-card>
           <div class="field">
             <mat-form-field>
-              <input matInput placeholder="Makale Başlığı" ngModel name="title">
+              <input matInput placeholder="Makale Başlığı" ngModel name="title" required>
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field>
-              <input matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title">
+              <input matInput placeholder="Makale Alt Başlığı" ngModel name="sub_title" required>
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field>
-              <input matInput placeholder="Makale uzantısı" ngModel name="slug">
+              <input matInput placeholder="Makale uzantısı" ngModel name="slug" required>
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field>
-              <mat-chip-list #chipList>
-                <mat-chip *ngFor="let keyword of keywords" [removable]="1 === 1" (removed)="service.removeKeyword(keyword)">
-                  {{keyword}}
-                  <span matChipRemove>
-                    <i class="fa fa-times-circle" aria-hidden="true"></i>
-                  </span>
-                </mat-chip>
-                <input placeholder="Anahtar Kelimeler" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  (matChipInputTokenEnd)="service.addKeyword($event)">
-              </mat-chip-list>
+              <input matInput placeholder="Anahtar Kelimeler virgül işareti ile ayrılır" ngModel name="keywords"
+                required>
             </mat-form-field>
           </div>
 
           <div class="field">
-            <mat-select placeholder="Dil" name="language_id" ngModel>
+            <mat-select placeholder="Dil" name="language_id" ngModel required>
               <mat-option *ngFor="let language of languages" [value]="language.id">
                 {{ language.name }}
               </mat-option>
@@ -58,49 +51,15 @@
                 </div>
               </div>
             </div>
-
-            <div class="level">
-              <div class="level-left">
-                <div class="level-item">
-                  <span>Forumda Yayınla</span>
-                </div>
-              </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <mat-checkbox ngModel name="forum_published" [disabled]="!f.value.published"></mat-checkbox>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div class="field">
-            <div class="level">
-              <div class="level-left">
-                <div class="level-item">
-                  <button mat-raised-button type="button" (click)="openImageSelect()">Fotoğraf Seç</button>
-                </div>
-              </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <img src="" id="img">
-                </div>
-              </div>
-            </div>
-          </div>
-
+          <hr>
           <div class="field">
             <p class="title is-size-4 has-text-weight-light">Kategoriler</p>
-            <hr>
-          </div>
-          
-          <div class="field" *ngFor="let category of categories">
-            <mat-checkbox [(ngModel)]="category.exist" [name]="category.slug">{{category.name}}</mat-checkbox>
           </div>
 
-          <div class="has-text-centered">
-            <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
-              <mat-icon>add</mat-icon>
-            </button>
+          <div class="field" *ngFor="let category of categories">
+            <mat-checkbox [(ngModel)]="category.exist" [name]="category.slug">{{category.name}}</mat-checkbox>
           </div>
 
         </mat-card>
@@ -108,10 +67,23 @@
 
       <div class="column is-two-thirds">
         <mat-card>
+          <div class="level">
+            <div class="level-left">
+              <input type="hidden" name="image" [ngModel]="imageName" required>
+              <button mat-raised-button type="button" (click)="openImageSelect()">Fotoğraf Seç</button>
+            </div>
+            <div class="level-right">
+              <img src="" id="img">
+            </div>
+          </div>
           <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
         </mat-card>
       </div>
-      
+
+      <button mat-fab class="add-btn" type="submit" [disabled]="!f.valid">
+        <mat-icon>add</mat-icon>
+      </button>
+
     </div>
   </form>
 </div>

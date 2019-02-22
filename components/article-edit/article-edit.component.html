@@ -1,6 +1,23 @@
 <mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
 
-<div class="" *ngIf="isPageReady">
+<div class="container" *ngIf="isPageReady">
+  <div class="action-center">
+    <mat-card>
+      <ul class="is-unstyled">
+        <li *ngIf="user.user_id == article.author.user_id || user.role_id == 1">
+          <button mat-raised-button color="primary" type="button" (click)="openManagePermission()">
+            <mat-icon>perm_identity</mat-icon>İzinleri Yönet
+          </button>
+        </li>
+        <li>
+          <button mat-raised-button type="button" color="warn" (click)="deleteArticle()">
+            <mat-icon>delete</mat-icon>Çöpe taşı
+          </button>
+        </li>
+      </ul>
+    </mat-card>
+  </div>
+
   <form #f="ngForm" (ngSubmit)="postArticle(f)">
     <div class="columns">
       <div class="column is-one-third">
@@ -43,19 +60,6 @@
             <mat-checkbox [(ngModel)]="category.exist" [name]="category.slug">{{category.name}}</mat-checkbox>
           </div>
         </mat-card>
-      </div>
-
-      <div class="column is-one-third">
-        <mat-card>
-          <div class="field" *ngIf="user.user_id == article.author.user_id || user.role_id == 1">
-            <button mat-raised-button type="button" (click)="openManagePermission()">İzinleri Yönet</button>
-          </div>
-
-          <div class="field">
-            <button mat-raised-button type="button" color="warn" (click)="deleteArticle()">Çöpe taşı</button>
-          </div>
-        </mat-card>
-
       </div>
     </div>
 

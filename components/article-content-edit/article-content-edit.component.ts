@@ -1,7 +1,5 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { MatChipInputEvent } from '@angular/material';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
@@ -10,6 +8,7 @@ import { ArticleRequestService } from '../../services/article-request.service';
 
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ArticleService } from '../../services/article.service';
 
 declare var tinymce: any;
 
@@ -24,15 +23,11 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
 
   language: any;
 
-  @Input() elementId = 'tinymce-textarea';
-
-  @Output() editorKeyup = new EventEmitter<any>();
-
   editor: any;
 
   subs = new Subscription();
 
-  separatorKeysCodes = [ENTER, COMMA];
+  keywords = '';
 
   @ViewChild('tiny') set tiny(tiny: any) {
     if (this.article) {
@@ -48,7 +43,8 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private cacheService: CacheService,
-    private articleRequestService: ArticleRequestService,
+    private requestService: ArticleRequestService,
+    private service: ArticleService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) { }
@@ -56,13 +52,13 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const rq1 = this.route.params.pipe(
       switchMap((params: Params) =>
-        this.articleRequestService.getArticleByContent(params['slug'], params['language_slug'])
+        this.requestService.getArticleByContent(params['slug'], params['language_slug'])
       ))
       .subscribe((response: any) => {
 
         this.article = response;
 
-        const rq2 = this.cacheService.get('languages', this.articleRequestService.makeGetRequest('admin.languages'))
+        const rq2 = this.cacheService.get('languages', this.requestService.makeGetRequest('admin.languages'))
           .subscribe(languages => {
             this.language = languages.find(language => language.id === response.content.language_id);
           });
@@ -77,37 +73,25 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
     tinymce.init({
       height: '420px',
       plugins: ['link', 'paste', 'table', 'image', 'fullscreen'],
-      selector: '#' + this.elementId,
+      selector: '#' + 'tinymce-textarea',
       skin_url: '/assets/skins/oxide',
       toolbar: 'image myitem',
       setup: editor => {
 
-        const dialog = this.dialog;
-
-        editor.on('keyup', () => {
-
-          const content = editor.getContent();
-          this.editorKeyup.emit(content);
-          this.article.content.body = content;
-        });
-
         editor.ui.registry.addButton('myitem', {
           text: 'Resim Ekle',
           onAction: (_) => {
-            const ImageSelectDialog = dialog.open(ImageSelectComponent, {
-              data: {
-                image_request: this.articleRequestService.makeGetRequest('image.images'),
-                thumb_image_url: this.articleRequestService.makeUrl('storage.images')
-              }
-            });
 
-            const rq1 = ImageSelectDialog.afterClosed().subscribe(response => {
-              editor.insertContent(
-                `<img src="${response.thumb_url}" alt="${response.alt}" width="${response.width}" height="${response.height}" />`
-              );
-
-              rq1.unsubscribe();
-            });
+            this.subs.add(
+              this.service.insertImageIntoEditor(this.dialog, ImageSelectComponent, {
+                image_request: this.requestService.makeGetRequest('image.images'),
+                thumb_image_url: this.requestService.makeUrl('storage.images')
+              }).subscribe(response =>
+                editor.insertContent(
+                  `<img src="${response.thumb_url}" alt="${response.alt}" width="${response.width}" height="${response.height}" />`
+                )
+              )
+            );
           }
         });
 
@@ -125,38 +109,28 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
   }
 
   editArticle(f: NgForm) {
-    const rq2 = this.articleRequestService.postArticleContent(this.article.id, {
+    for (const keyw of f.value.keywords.split(',')) {
+      if (keyw !== '') {
+        this.article.content.keywords.push(keyw);
+      }
+    }
+
+    const rq2 = this.requestService.postArticleContent(this.article.id, {
       title: f.value.title,
       sub_title: f.value.sub_title,
       body: tinymce.activeEditor.getContent(),
       keywords: this.article.content.keywords,
       published: f.value.published ? 1 : 0,
       language_id: this.article.content.language_id,
-    }).subscribe(response => this.snackBar.open(response.message, response.action, {duration: 2000}));
+    }).subscribe(response => {
+      this.snackBar.open(response.message, response.action, { duration: 2000 });
+      this.keywords = '';
+    });
 
     this.subs.add(rq2);
   }
 
-  addKeyword(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    // Add our keyword
-    if ((value || '').trim()) {
-      this.article.content.keywords.push(value.trim());
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  removeKeyword(keyword: any): void {
-    const index = this.article.content.keywords.indexOf(keyword);
-
-    if (index >= 0) {
-      this.article.content.keywords.splice(index, 1);
-    }
+  removeKeyword(index: number): void {
+    this.article.content.keywords.splice(index, 1);
   }
 }

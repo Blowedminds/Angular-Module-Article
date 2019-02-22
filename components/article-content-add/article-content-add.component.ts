@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 import { MatDialog } from '@angular/material';
-import { MatChipInputEvent } from '@angular/material';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
@@ -12,6 +10,7 @@ import { ArticleRequestService } from '../../services/article-request.service';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ArticleService } from '../../services/article.service';
+import { HelpersService } from '../../../auth/imports';
 
 declare var tinymce: any;
 
@@ -26,11 +25,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
 
   add_languages: any;
 
-  keywords: Array<string> = [];
-
   editor: any;
-
-  separatorKeysCodes = [ENTER, COMMA];
 
   subs = new Subscription();
 
@@ -50,6 +45,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
     private requestService: ArticleRequestService,
     private service: ArticleService,
     private cacheService: CacheService,
+    private helpersService: HelpersService,
     private route: ActivatedRoute,
   ) { }
 
@@ -113,15 +109,23 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
   }
 
   addLanguageArticle(f: NgForm) {
+    const keywords = [];
+
+    for (const keyw of f.value.keywords.split(',')) {
+      if (keyw !== '') {
+        keywords.push(keyw);
+      }
+    }
+
     this.subs.add(
       this.requestService.putArticleContent(this.article.id, {
         title: f.value.title,
         sub_title: f.value.sub_title,
         body: tinymce.activeEditor.getContent(),
-        keywords: this.keywords,
+        keywords: keywords,
         published: f.value.published ? 1 : 0,
-        language_id: f.value.language_id
-      }).subscribe((response) => alert('success'))
+        language: f.value.language
+      }).subscribe((response) => this.helpersService.navigate(['article/content/edit/' + this.article.slug, f.value.language]))
     );
   }
 }

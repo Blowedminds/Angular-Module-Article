@@ -1,16 +1,10 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { MatChipInputEvent } from '@angular/material';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
-
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { CacheService, HelpersService, ImageSelectComponent } from '../../imports';
 import { ArticleRequestService } from '../../services/article-request.service';
-
-import { Subscription } from 'rxjs';
-
-import { environment } from '../../../../environments/environment';
 import { ArticleService } from '../../services/article.service';
 
 declare var tinymce: any;
@@ -28,11 +22,7 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
 
   categories: Array<any> = [];
 
-  keywords: Array<string> = [];
-
-  image_name: string;
-
-  separatorKeysCodes = [ENTER, COMMA];
+  imageName: string;
 
   subs = new Subscription();
 
@@ -43,7 +33,6 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
   }
 
   get isPageReady() {
-
     return this.languages && this.categories;
   }
 
@@ -108,29 +97,31 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
   }
 
   addArticle(f: NgForm) {
+    if (!f.valid) {
+      return;
+    }
+
     const categories = this.categories.filter(category => category.exist).map(category => category.id);
 
+    const keywords = [];
+
+    for (const keyw of f.value.keywords.split(',')) {
+      if (keyw !== '') {
+        keywords.push(keyw);
+      }
+    }
     this.subs.add(
       this.requestService.putArticle({
         title: f.value.title,
         sub_title: f.value.sub_title,
         body: tinymce.activeEditor.getContent(),
-        keywords: this.keywords,
+        keywords: keywords,
         published: f.value.published ? 1 : 0,
         language_id: f.value.language_id,
         slug: f.value.slug,
         category: categories,
-        image: this.image_name
-      }).subscribe(response => {
-
-        if (f.value.forum_published && f.value.published) {
-          const languageSlug = this.languages.find(language => language.id === f.value.language_id);
-          const url = `${environment.discussUrl}?article=${f.value.slug}&language=${languageSlug.slug}#new_topic`;
-          window.location.href = url;
-        } else {
-          this.helpersService.navigate(['/articles']);
-        }
-      })
+        image: this.imageName
+      }).subscribe(response => this.helpersService.navigate(['/articles']))
     );
   }
 
@@ -149,7 +140,7 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
 
         el.setAttribute('src', response.thumb_url);
 
-        this.image_name = response.u_id;
+        this.imageName = response.u_id;
       })
     );
   }

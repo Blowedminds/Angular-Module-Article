@@ -1,74 +1,75 @@
-<div class="" *ngIf="isPageReady">
+<mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
 
+<div class="container" *ngIf="isPageReady">
   <div class="header">
     <h1 class="title has-text-centered">{{article.content.title}} / {{language.name}}</h1>
   </div>
 
   <form #f="ngForm" (ngSubmit)="editArticle(f)">
     <div class="columns">
-      <mat-card class="column is-one-third">
+      <div class="column is-one-third">
+        <mat-card>
 
-        <div class="field">
-          <mat-form-field>
-            <input matInput placeholder="Makale Başlığı" [ngModel]="article.content.title" name="title">
-          </mat-form-field>
-        </div>
+          <div class="field">
+            <mat-form-field>
+              <input matInput placeholder="Makale Başlığı" [ngModel]="article.content.title" name="title">
+            </mat-form-field>
+          </div>
 
-        <div class="field">
-          <mat-form-field>
-            <input matInput placeholder="Makale Alt Başlığı" [ngModel]="article.content.sub_title" name="sub_title">
-          </mat-form-field>
-        </div>
+          <div class="field">
+            <mat-form-field>
+              <input matInput placeholder="Makale Alt Başlığı" [ngModel]="article.content.sub_title" name="sub_title">
+            </mat-form-field>
+          </div>
 
-        <div class="field">
-          <mat-form-field>
-            <mat-chip-list #chipList>
-              <mat-chip *ngFor="let keyword of article.content.keywords" [removable]="1 === 1" (removed)="removeKeyword(keyword)">
-                {{keyword}}
-                <span matChipRemove>
-                  <i class="fa fa-times-circle" aria-hidden="true"></i>
-                </span>
-              </mat-chip>
-              <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addKeyword($event)">
-            </mat-chip-list>
-          </mat-form-field>
-        </div>
+          <div class="field">
+            <aside class="menu">
+              <ul class="menu-list">
+                <li *ngFor="let keyword of article.content.keywords; let i = index">
+                  <span class="tag is-light">{{keyword}} <mat-icon (click)="removeKeyword(i)">close</mat-icon></span>
+                </li>
+              </ul>
+            </aside>
+            <mat-form-field>
+              <input matInput placeholder="Anahtar Kelimeler virgül işareti ile ayrılır" [(ngModel)]="keywords" name="keywords">
+            </mat-form-field>
+          </div>
 
-        <div class="field">
-          <mat-select placeholder="Dil" name="language" [ngModel]="article.content.language_id" disabled>
-            <mat-option [value]="language.id">
-              {{ language.name }}
-            </mat-option>
-          </mat-select>
-        </div>
+          <div class="field">
+            <mat-select placeholder="Dil" name="language" [ngModel]="article.content.language_id" disabled>
+              <mat-option [value]="language.id">
+                {{ language.name }}
+              </mat-option>
+            </mat-select>
+          </div>
 
-        <div class="field">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <span>Yayınlanma</span>
+          <div class="field">
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <span>Yayınlanma</span>
+                </div>
               </div>
-            </div>
-            <div class="level-right">
-              <div class="level-item">
-                <mat-checkbox [(ngModel)]="article.content.published" name="published"></mat-checkbox>
+              <div class="level-right">
+                <div class="level-item">
+                  <mat-checkbox [(ngModel)]="article.content.published" name="published"></mat-checkbox>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="field has-text-centered">
-          <button mat-fab type="submit" class="add-btn" [disabled]="!f.valid">
-            <mat-icon>save</mat-icon>
-          </button>
-        </div>
-      </mat-card>
-
-      <mat-card class="column">
-        <div class="">
+          <div class="field has-text-centered">
+            <button mat-fab type="submit" class="add-btn" [disabled]="!f.valid">
+              <mat-icon>save</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+      <div class="column">
+        <mat-card>
           <textarea ngModel name="body" id="tinymce-textarea" #tiny></textarea>
-        </div>
-      </mat-card>
+        </mat-card>
+      </div>
     </div>
   </form>
 </div>

@@ -125,18 +125,11 @@ export class ArticleRequestService extends MainRequestService {
       .pipe(catchError(error => this.handleError(error)));
   }
 
-  putPermission(
-    article_id: number,
-    change_have_permission: Array<any>,
-    change_not_have_permission: Array<any>
-  ): Observable<any> {
+  putPermission(article_id: number, permissions: any): Observable<any> {
     const url = this.makeUrl('article.permission', `${article_id}`);
 
     return this.http
-      .put(url, JSON.stringify({
-        have_permission: change_have_permission,
-        not_have_permission: change_not_have_permission
-      }), this.options)
+      .put(url, JSON.stringify({permissions: permissions}), this.options)
       .pipe(catchError(error => this.handleError(error)));
   }
 }

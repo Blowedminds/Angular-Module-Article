@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -18,13 +18,11 @@ import { ArticlePermissionComponent } from '../../dialogs/article-permission/art
   templateUrl: './article-edit.component.html',
   styleUrls: ['./article-edit.component.sass']
 })
-export class ArticleEditComponent implements OnInit {
+export class ArticleEditComponent implements OnInit, OnDestroy {
 
   article: any;
 
   categories: Array<any> = [];
-
-  API_URL: any;
 
   THUMB_IMAGE_URL: string;
 
@@ -49,32 +47,37 @@ export class ArticleEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    const rq1 = this.route.params
-      .pipe(switchMap((params: Params) =>
-        this.requestService.getArticle(params['slug'])
-      ))
-      .subscribe((response: any) => {
+    this.subs.add(
+      this.route.params
+        .pipe(switchMap((params: Params) =>
+          this.requestService.getArticle(params['slug'])
+        ))
+        .subscribe((response: any) => {
 
-        this.article = response;
+          this.article = response;
 
-        const rq = this.cacheService
-          .get('categories', this.requestService.makeGetRequest('admin.categories'))
-          .subscribe((categories: Array<any>) => {
-            this.categories = Array.from(categories);
+          this.subs.add(
+            this.cacheService.get('categories', this.requestService.makeGetRequest('admin.categories'))
+              .subscribe((categories: Array<any>) => {
+                this.categories = Array.from(categories);
 
-            for (const category of this.categories) {
-              const index = response.categories.findIndex(_category => category.id === _category.id);
-              category.exist = index !== -1;
-            }
-          });
+                for (const category of this.categories) {
+                  const index = response.categories.findIndex(_category => category.id === _category.id);
+                  category.exist = index !== -1;
+                }
+              })
+          );
+        })
+    );
 
-        this.subs.add(rq);
-      });
+    this.subs.add(
+      this.cacheService.get('user', this.requestService.makeGetRequest('user.info'))
+        .subscribe(response => this.user = response)
+    );
+  }
 
-    const rq2 = this.cacheService.get('user', this.requestService.makeGetRequest('user.info'))
-      .subscribe(response => this.user = response);
-
-    this.subs.add(rq1).add(rq2);
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
   getToken() {
@@ -84,24 +87,20 @@ export class ArticleEditComponent implements OnInit {
   postArticle(f: NgForm) {
     const categories = this.categories.filter(category => category.exist).map(category => category.id);
 
-    const rq1 = this.requestService.postArticle(this.article.id, {
-      slug: f.value.slug,
-      categories: categories,
-      image: f.value.image
-    }).subscribe(response => {
-      this.service.openSnack(this.snackBar, response, response.state === 'success');
-
-      this.helpersService.navigate(['/article/edit', f.value.slug]);
-    });
-
-    this.subs.add(rq1);
+    this.subs.add(
+      this.requestService.postArticle(this.article.id, {
+        slug: f.value.slug,
+        categories: categories,
+        image: f.value.image
+      }).subscribe(response => this.service.openSnack(this.snackBar, response, response.state === 'success'))
+    );
   }
 
   deleteArticle() {
-    const rq2 = this.requestService.deleteArticle(this.article.id)
-      .subscribe(response => this.helpersService.navigate(['/articles']));
-
-    this.subs.add(rq2);
+    this.subs.add(
+      this.requestService.deleteArticle(this.article.id)
+        .subscribe(response => this.helpersService.navigate(['/articles']))
+    );
   }
 
   openImageSelect() {
@@ -112,19 +111,19 @@ export class ArticleEditComponent implements OnInit {
       }
     });
 
-    const rq3 = dialogRef.afterClosed().subscribe(response => {
+    this.subs.add(
+      dialogRef.afterClosed().subscribe(response => {
 
-      if (response) {
+        if (response) {
 
-        const element = document.getElementById('img');
+          const element = document.getElementById('img');
 
-        element.setAttribute('src', response.thumb_url);
+          element.setAttribute('src', response.thumb_url);
 
-        this.article.image = response.u_id;
-      }
-    });
-
-    this.subs.add(rq3);
+          this.article.image = response.u_id;
+        }
+      })
+    );
   }
 
   openManagePermission() {
@@ -134,8 +133,12 @@ export class ArticleEditComponent implements OnInit {
       }
     });
 
-    const rq4 = dialogRef.afterClosed().subscribe(response => alert('success'));
-
-    this.subs.add(rq4);
+    this.subs.add(
+      dialogRef.afterClosed().subscribe(response => {
+        if (response) {
+          this.service.openSnack(this.snackBar, response, response.state === 'success');
+        }
+      })
+    );
   }
 }
