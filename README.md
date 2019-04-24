@@ -3,7 +3,7 @@
 This module helps you to manage the site articles.
 
 **Required Packages**
-*--no required packages--*
+1. "tinymce": "^5.0.3",
 
 **Required Modules**
 1. fmblog-frontend-navigation
@@ -32,4 +32,14 @@ article: {
     articles: { url: 'articles/' },
     trash: { url: 'trashed-articles/' },
 }
+`
+4. Import tinymce files into angular.json file, eg.  
+`
+"node_modules/tinymce/tinymce.min.js",
+"node_modules/tinymce/themes/silver/theme.min.js",
+"node_modules/tinymce/plugins/paste/plugin.min.js",
+"node_modules/tinymce/plugins/link/plugin.min.js",
+"node_modules/tinymce/plugins/table/plugin.min.js",
+"node_modules/tinymce/plugins/image/plugin.min.js",
+"node_modules/tinymce/plugins/fullscreen/plugin.min.js"
 `
