@@ -43,3 +43,4 @@ article: {
 "node_modules/tinymce/plugins/image/plugin.min.js",
 "node_modules/tinymce/plugins/fullscreen/plugin.min.js"
 `
+5. Add tinymce oxin skin from `node_modules/tinymce/skins/ui/oxide` to `src/assets`
