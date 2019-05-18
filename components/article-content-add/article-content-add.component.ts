@@ -10,7 +10,7 @@ import { ArticleRequestService } from '../../services/article-request.service';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ArticleService } from '../../services/article.service';
-import { HelpersService } from '../../../auth/imports';
+import { HelpersService } from '../../imports';
 
 declare var tinymce: any;
 

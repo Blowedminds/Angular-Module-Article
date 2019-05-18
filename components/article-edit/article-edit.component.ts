@@ -97,10 +97,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   deleteArticle() {
-    this.subs.add(
-      this.requestService.deleteArticle(this.article.id)
-        .subscribe(response => this.helpersService.navigate(['/articles']))
-    );
+    this.service.deleteAlert('Makaleyi Sil', () => {
+      this.subs.add(
+        this.requestService.deleteArticle(this.article.id)
+          .subscribe(response => this.helpersService.navigate(['/articles']))
+      );
+    });
   }
 
   openImageSelect() {
