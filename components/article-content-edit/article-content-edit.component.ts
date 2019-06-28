@@ -70,34 +70,13 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
   }
 
   runTinymce() {
-    tinymce.init({
-      height: '420px',
-      plugins: ['link', 'paste', 'table', 'image', 'fullscreen'],
-      selector: '#' + 'tinymce-textarea',
-      skin_url: '/assets/skins/oxide',
-      toolbar: 'image myitem',
-      setup: editor => {
-
-        editor.ui.registry.addButton('myitem', {
-          text: 'Resim Ekle',
-          onAction: (_) => {
-
-            this.subs.add(
-              this.service.insertImageIntoEditor(this.dialog, ImageSelectComponent, {
-                image_request: this.requestService.makeGetRequest('image.images'),
-                thumb_image_url: this.requestService.makeUrl('storage.images')
-              }).subscribe(response =>
-                editor.insertContent(
-                  `<img src="${response.thumb_url}" alt="${response.alt}" width="${response.width}" height="${response.height}" />`
-                )
-              )
-            );
-          }
-        });
-
-        this.editor = editor;
-      },
-    });
+    this.service.initTinymce(
+      tinymce,
+      this.dialog,
+      this.subs,
+      ImageSelectComponent,
+      this.requestService,
+      (editor: any) => { this.editor = editor; });
 
     tinymce.activeEditor.setContent(this.article.content.body);
   }

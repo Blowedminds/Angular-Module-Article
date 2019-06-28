@@ -19,6 +19,38 @@ export class ArticleService extends MainService {
     return ImageSelectDialog.afterClosed();
   }
 
+  initTinymce(tinymce: any, dialog:any, subs:any, component:any, requestService:any, callback: any): void {
+    tinymce.init({
+      height: '420px',
+      plugins: ['link', 'paste', 'table', 'image', 'fullscreen'],
+      selector: '#' + 'tinymce-textarea',
+      skin_url: '/assets/skins/oxide',
+      toolbar: 'image myitem',
+      image_advtab: true,
+      setup: editor => {
+
+        editor.ui.registry.addButton('myitem', {
+          text: 'Resim Ekle',
+          onAction: (_) => {
+
+            subs.add(
+              this.insertImageIntoEditor(dialog, component, {
+                image_request: requestService.makeGetRequest('image.images'),
+                thumb_image_url: requestService.makeUrl('storage.images')
+              }).subscribe(response =>
+                editor.insertContent(
+                  `<img src="${response.thumb_url}" alt="${response.alt}" width="${response.width}" height="${response.height}" />`
+                )
+              )
+            );
+          }
+        });
+
+        callback(editor);
+      },
+    });
+  }
+
   addKeyword(event: MatChipInputEvent, keywords: Array<string>): void {
     const input = event.input;
     const value = event.value;
