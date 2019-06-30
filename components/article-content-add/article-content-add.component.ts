@@ -29,7 +29,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
 
   subs = new Subscription();
 
-  @ViewChild('tiny') set tiny(tiny: any) {
+  @ViewChild('tiny', { static: false }) set tiny(tiny: any) {
     if (this.add_languages) {
 
       setTimeout(() => this.runTinymce(), 0);
