@@ -24,14 +24,14 @@
 
           <div class="field">
             <aside class="menu">
-              <ul class="menu-list">
-                <li *ngFor="let keyword of article.content.keywords; let i = index">
-                  <span class="tag is-light">{{keyword}} <mat-icon (click)="removeKeyword(i)">close</mat-icon></span>
-                </li>
-              </ul>
+              <mat-chip-list *ngFor="let keyword of article.content.keywords; let i = index">
+                <mat-chip color="accent" selected>{{keyword}} <mat-icon (click)="removeKeyword(i)">cancel</mat-icon>
+                </mat-chip>
+              </mat-chip-list>
             </aside>
             <mat-form-field>
-              <input matInput placeholder="Anahtar Kelimeler virgül işareti ile ayrılır" [(ngModel)]="keywords" name="keywords">
+              <input matInput placeholder="Anahtar Kelimeler virgül işareti ile ayrılır" [(ngModel)]="keywords"
+                name="keywords">
             </mat-form-field>
           </div>
 
