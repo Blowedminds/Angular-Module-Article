@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { MainService } from '../imports';
 import { Observable } from 'rxjs';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Injectable()
 export class ArticleService extends MainService {
