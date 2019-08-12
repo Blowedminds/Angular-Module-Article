@@ -57,7 +57,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
         this.article = response;
 
         this.subs.add(
-          this.cacheService.get('languages', this.requestService.makeGetRequest('admin.languages'))
+          this.cacheService.get('languages', this.requestService.makeGetRequest('core.language.languages'))
             .subscribe(languages => {
               this.add_languages = languages;
 

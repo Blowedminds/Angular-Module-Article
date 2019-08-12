@@ -59,7 +59,7 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
 
         this.article = response;
 
-        const rq2 = this.cacheService.get('languages', this.requestService.makeGetRequest('admin.languages'))
+        const rq2 = this.cacheService.get('languages', this.requestService.makeGetRequest('core.language.languages'))
           .subscribe(languages => {
             this.language = languages.find(language => language.id === response.content.language_id);
           });

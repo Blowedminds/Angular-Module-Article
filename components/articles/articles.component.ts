@@ -48,7 +48,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
     );
 
     this.subs.add(
-      this.cacheService.get('languages', this.requestService.makeGetRequest('admin.languages'))
+      this.cacheService.get('languages', this.requestService.makeGetRequest('core.language.languages'))
         .subscribe(response => this.languages = response)
     );
   }

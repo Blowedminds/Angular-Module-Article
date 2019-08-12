@@ -58,7 +58,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           this.article = response;
 
           this.subs.add(
-            this.cacheService.get('categories', this.requestService.makeGetRequest('admin.categories'))
+            this.cacheService.get('categories', this.requestService.makeGetRequest('core.category.categories'))
               .subscribe((categories: Array<any>) => {
                 this.categories = Array.from(categories);
 
@@ -93,7 +93,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         slug: f.value.slug,
         categories: categories,
         image: f.value.image
-      }).subscribe(response => this.service.openSnack(this.snackBar, response, response.state === 'success'))
+      }).subscribe(response => this.service.openSnack(this.snackBar, response.message, response.action, response.state === 'success'))
     );
   }
 
@@ -139,7 +139,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.subs.add(
       dialogRef.afterClosed().subscribe(response => {
         if (response) {
-          this.service.openSnack(this.snackBar, response, response.state === 'success');
+          this.service.openSnack(this.snackBar, response.message, response.action, response.state === 'success');
         }
       })
     );

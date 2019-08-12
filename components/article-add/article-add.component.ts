@@ -45,10 +45,10 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.cacheService.get('languages', this.requestService.makeGetRequest('admin.languages'))
+    this.cacheService.get('languages', this.requestService.makeGetRequest('core.language.languages'))
       .subscribe(response => this.languages = response.slice(0));
 
-    this.cacheService.get('categories', this.requestService.makeGetRequest('admin.categories'))
+    this.cacheService.get('categories', this.requestService.makeGetRequest('core.category.categories'))
       .subscribe(response => {
         this.categories = Array.from(response);
 
