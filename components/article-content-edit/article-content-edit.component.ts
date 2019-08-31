@@ -6,10 +6,10 @@ import { NgForm } from '@angular/forms';
 
 import { CacheService, ImageSelectComponent } from '../../imports';
 import { ArticleRequestService } from '../../services/article-request.service';
-
-import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { ArticleService } from '../../services/article.service';
+
+import { Subscription, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 declare var tinymce: any;
 
@@ -51,23 +51,26 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const rq1 = this.route.params.pipe(
-      switchMap((params: Params) =>
-        this.requestService.getArticleByContent(params['slug'], params['language_slug'])
-      ))
-      .subscribe((response: any) => {
+    this.subs.add(
+      this.route.params.pipe(
+        switchMap((params: Params) =>
+          params['slug'] && params['language_slug'] ?
+            this.requestService.getArticleByContent(params['slug'], params['language_slug']) :
+            throwError({})
+        ))
+        .subscribe((response: any) => {
 
-        this.article = response;
+          this.article = response;
 
-        const rq2 = this.cacheService.get('languages', this.requestService.makeGetRequest('core.language.languages'))
-          .subscribe(languages => {
-            this.language = languages.find(language => language.id === response.content.language_id);
-          });
+          this.subs.add(
+            this.cacheService.get('languages', this.requestService.makeGetRequest('core.language.languages'))
+              .subscribe(languages => {
+                this.language = languages.find(language => language.id === response.content.language_id);
+              })
+          );
+        })
+    );
 
-        // this.subs.add(rq2)
-      });
-
-    this.subs.add(rq1);
   }
 
   runTinymce() {

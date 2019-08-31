@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { CacheService, HelpersService, ImageSelectComponent } from '../../imports';
-
 import { ArticleRequestService } from '../../services/article-request.service';
 import { ArticleService } from '../../services/article.service';
 
@@ -50,9 +49,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subs.add(
       this.route.params
-        .pipe(switchMap((params: Params) =>
-          this.requestService.getArticle(params['slug'])
-        ))
+        .pipe(
+          switchMap((params: Params) => this.requestService.getArticle(params['slug'])
+          ))
         .subscribe((response: any) => {
 
           this.article = response;
