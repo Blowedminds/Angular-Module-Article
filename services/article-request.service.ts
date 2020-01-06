@@ -28,7 +28,7 @@ export class ArticleRequestService extends MainRequestService {
   }
 
   getArticlesPaginate(paginate: any): Observable<any> {
-    return this.makeGetRequest('article.articles', `?page=${paginate.pageIndex}&per-page=${paginate.pageSize}`);
+    return this.makeGetRequest('article.articles.paginate', `?page=${paginate.pageIndex}&per-page=${paginate.pageSize}`);
   }
 
   putArticle(data: any): Observable<any> {
@@ -52,7 +52,7 @@ export class ArticleRequestService extends MainRequestService {
   }
 
   getTrash(): Observable<any> {
-    return this.makeGetRequest('article.trash');
+    return this.makeGetRequest('article.articles.trashed.paginate');
   }
 
   postRestore(id: number): Observable<any> {
