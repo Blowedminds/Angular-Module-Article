@@ -90,7 +90,7 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
       }
     }
     this.subs.add(
-      this.requestService.putArticle({
+      this.requestService.postArticle({
         title: f.value.title,
         sub_title: f.value.sub_title,
         body: tinymce.activeEditor.getContent(),
@@ -98,7 +98,7 @@ export class ArticleAddComponent implements OnInit, OnDestroy {
         published: f.value.published ? 1 : 0,
         language_id: f.value.language_id,
         slug: f.value.slug,
-        category: categories,
+        categories: categories,
         image: this.imageName
       }).subscribe(response => this.helpersService.navigate(['/articles']))
     );

@@ -87,7 +87,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
       (editor: any) => { this.editor = editor; });
   }
 
-  addLanguageArticle(f: NgForm) {
+  addArticleContent(f: NgForm) {
     const keywords = [];
 
     for (const keyw of f.value.keywords.split(',')) {
@@ -97,7 +97,7 @@ export class ArticleContentAddComponent implements OnInit, OnDestroy {
     }
 
     this.subs.add(
-      this.requestService.putArticleContent(this.article.id, {
+      this.requestService.postArticleContent(this.article.slug, f.value.language, {
         title: f.value.title,
         sub_title: f.value.sub_title,
         body: tinymce.activeEditor.getContent(),

@@ -84,11 +84,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return this.helpersService.getToken();
   }
 
-  postArticle(f: NgForm) {
+  putArticle(f: NgForm) {
     const categories = this.categories.filter(category => category.exist).map(category => category.id);
 
     this.subs.add(
-      this.requestService.postArticle(this.article.id, {
+      this.requestService.putArticle(this.article.slug, {
         slug: f.value.slug,
         categories: categories,
         image: f.value.image
@@ -99,7 +99,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   deleteArticle() {
     this.service.deleteAlert('Makaleyi Sil', () => {
       this.subs.add(
-        this.requestService.deleteArticle(this.article.id)
+        this.requestService.deleteArticle(this.article.slug)
           .subscribe(response => this.helpersService.navigate(['/articles']))
       );
     });

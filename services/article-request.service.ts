@@ -31,20 +31,20 @@ export class ArticleRequestService extends MainRequestService {
     return this.makeGetRequest('article.articles.paginate', `?page=${paginate.pageIndex}&per-page=${paginate.pageSize}`);
   }
 
-  putArticle(data: any): Observable<any> {
-    return this.makePutRequest('article.article', data);
+  postArticle(data: any): Observable<any> {
+    return this.makePostRequest('article.article', data);
   }
 
-  postArticleContent(id: number, data: any): Observable<any> {
-    return this.makePostRequest('article.content', data, `${id}`);
+  putArticleContent(slug: string, languageSlug: string, data: any): Observable<any> {
+    return this.makePutRequest('article.content', data, `${slug}/${languageSlug}`);
   }
 
-  putArticleContent(id: number, data: any): Observable<any> {
-    return this.makePutRequest('article.content', data, `${id}`);
+  postArticleContent(slug: string, languageSlug: string, data: any): Observable<any> {
+    return this.makePostRequest('article.content', data, `${slug}/${languageSlug}`);
   }
 
-  postArticle(id: number, data: any): Observable<any> {
-    return this.makePostRequest('article.article', data, `${id}`);
+  putArticle(id: number, data: any): Observable<any> {
+    return this.makePutRequest('article.article', data, `${id}`);
   }
 
   deleteArticle(id: number): Observable<any> {

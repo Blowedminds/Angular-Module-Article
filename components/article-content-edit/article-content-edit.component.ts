@@ -98,13 +98,12 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
       }
     }
 
-    const rq2 = this.requestService.postArticleContent(this.article.id, {
+    const rq2 = this.requestService.putArticleContent(this.article.slug, this.language.slug, {
       title: f.value.title,
       sub_title: f.value.sub_title,
       body: tinymce.activeEditor.getContent(),
       keywords: this.article.content.keywords,
-      published: f.value.published ? 1 : 0,
-      language_id: this.article.content.language_id,
+      published: f.value.published ? 1 : 0
     }).subscribe(response => {
       this.snackBar.open(response.message, response.action, { duration: 2000 });
       this.keywords = '';
