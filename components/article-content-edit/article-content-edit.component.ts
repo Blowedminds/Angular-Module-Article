@@ -30,7 +30,7 @@ export class ArticleContentEditComponent implements OnInit, OnDestroy {
 
   keywords = '';
 
-  @ViewChild('tiny', { static: false }) set tiny(tiny: any) {
+  @ViewChild('tiny') set tiny(tiny: any) {
     if (this.article) {
 
       setTimeout(() => this.runTinymce(), 0);
